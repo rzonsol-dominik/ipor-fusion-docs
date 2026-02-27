@@ -57,16 +57,17 @@ Looks up the implementation for `selector_`, skips if `address(0)`, otherwise ca
 - **Validation logic:**
   - Computes `current = convertToAssets(10^decimals)`.
   - Compares against stored `expected` rate with `threshold` (1e18 = 100%).
-  - **Reverts** `ExchangeRateOutOfRange` if `|current - expected| > threshold * expected`.
+  - **Reverts** `ExchangeRateOutOfRange` if `|current - expected| > threshold * expected / 1e18`.
   - If deviation is between `threshold/2` and `threshold`, auto-updates the stored expected rate in substrates.
   - If within `threshold/2`, no update needed.
+- **Substrate source:** Uses the market's substrates (via `PlasmaVaultLib.getMarketSubstrates(marketId)`), not the PreHooksConfig substrates mapping.
 
 ### PauseFunctionPreHook
 
 **Purpose:** Emergency kill-switch for individual vault functions.
 
 - Stateless, no constructor arguments, no configuration.
-- `run()` always reverts with `FunctionPaused(selector)`.
+- `run()` is a `pure` function that always reverts with `FunctionPaused(selector)`.
 - Register it for any selector to block that function; remove it to unpause.
 
 ### UpdateBalancesPreHook

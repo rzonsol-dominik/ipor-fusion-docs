@@ -55,10 +55,11 @@ Sets `TransientStorageLib.setInputs(fuse[i], inputsByFuse[i])` for each fuse. Va
 Reads on-chain data via static calls to external contracts and stores results in its own outputs.
 
 ```solidity
-enter(ExternalCalls{calls[], responseLength})
+enter(bytes calldata data)
+// data is abi-decoded as ExternalCalls{calls[], responseLength}
 ```
 
-Each `ExternalCall` contains a target, calldata, and `ReadDataFromResponse[]` readers that extract typed values (uint256, int128, address, bool, etc.) from specific byte ranges of the response. Results are collected into a `bytes32[]` array and stored via `setOutputs(VERSION, results)`.
+The `data` parameter is raw `bytes calldata` that gets ABI-decoded into an `ExternalCalls` struct internally. Each `ExternalCall` contains a target, calldata, and `ReadDataFromResponse[]` readers that extract typed values (uint256, int128, address, bool, etc.) from specific byte ranges of the response. Results are collected into a `bytes32[]` array and stored via `setOutputs(VERSION, results)`.
 
 ### TransientStorageMapperFuse
 

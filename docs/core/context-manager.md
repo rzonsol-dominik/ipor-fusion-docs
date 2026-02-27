@@ -24,8 +24,10 @@ ContextManager                         ContextClient (target contract)
 | `runWithContextAndSignature(ContextDataWithSender[])` | Public | Executes calls with ECDSA-verified sender impersonation |
 | `addApprovedTargets(address[])` | ATOMIST_ROLE | Adds targets to whitelist |
 | `removeApprovedTargets(address[])` | ATOMIST_ROLE | Removes targets from whitelist |
+| `getApprovedTargets()` | View | Returns array of all approved target addresses |
 | `getNonce(address)` | View | Returns current nonce for replay protection |
 | `isTargetApproved(address)` | View | Checks whitelist status |
+| `proxyInitialize(address, address[])` | Initializer | Proxy init with access manager and initial approved targets |
 
 **Signature scheme** (non-EIP-712):
 ```
@@ -64,7 +66,7 @@ Single-context enforcement: `setupContext` reverts if a context is already activ
 ## Key Invariants
 
 - Only approved targets can be called through `runWithContext` / `runWithContextAndSignature`.
-- Context is always set before the call and cleared after, even on revert (guaranteed by sequential execution).
+- Context is always set before the call and cleared after. There is no try/catch — if a call reverts, the entire transaction reverts and transient state is discarded.
 - Signature nonces must strictly increase -- replay of old nonces reverts with `NonceTooLow`.
 - Signatures expire after `expirationTime` (block.timestamp check).
 - `_getSenderFromContext()` falls back to `msg.sender` when no context is active, maintaining backward compatibility.

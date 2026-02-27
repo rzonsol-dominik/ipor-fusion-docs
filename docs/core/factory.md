@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Factory System is the deployment infrastructure for IPOR Fusion vaults. `FusionFactory` is a UUPS-upgradeable orchestrator that coordinates six component factories to atomically deploy a complete vault instance (PlasmaVault + AccessManager + WithdrawManager + RewardsManager + PriceManager + ContextManager + FeeManager) in a single transaction using the EIP-1167 minimal proxy (Clones) pattern. Separate extension factories and price feed factories exist for wrapped vaults and oracle integrations.
+The Factory System is the deployment infrastructure for IPOR Fusion vaults. `FusionFactory` is a UUPS-upgradeable orchestrator that coordinates seven component factories to atomically deploy a complete vault instance (PlasmaVault + AccessManager + WithdrawManager + RewardsManager + PriceManager + ContextManager + FeeManager) in a single transaction using the EIP-1167 minimal proxy (Clones) pattern. Separate extension factories and price feed factories exist for wrapped vaults and oracle integrations.
 
 ## FusionFactory
 
@@ -32,10 +32,10 @@ updatePlasmaVaultAdminArray(addresses)                   // DEFAULT_ADMIN_ROLE
 
 ## Component Factories
 
-Each component factory exposes both `create(...)` (fresh deploy) and `clone(baseAddress, ...)` (EIP-1167 minimal proxy + `proxyInitialize`). The clone path is used by `FusionFactory` for gas efficiency.
+Most component factories expose both `create(...)` (fresh deploy) and `clone(baseAddress, ...)` (EIP-1167 minimal proxy + `proxyInitialize`). The clone path is used by `FusionFactory` for gas efficiency. Note: `PlasmaVaultFactory` only provides `clone()`, not `create()`.
 
 ### PlasmaVaultFactory
-Clones a `PlasmaVault` base implementation and calls `proxyInitialize(PlasmaVaultInitData)`. The init data includes asset name/symbol, underlying token, price oracle, fee config, access manager, withdraw manager, and the PlasmaVault base (delegate) address.
+Clones a `PlasmaVault` base implementation and calls `proxyInitialize(PlasmaVaultInitData)`. Only supports `clone()` (no standalone `create()`). The init data includes asset name/symbol, underlying token, price oracle, fee config, access manager, withdraw manager, and the PlasmaVault base (delegate) address.
 
 ### AccessManagerFactory
 Deploys or clones `IporFusionAccessManager`. Initialized with an `initialAuthority` (the FusionFactory itself during creation) and `redemptionDelayInSeconds`. The factory temporarily holds authority, then transfers it during final configuration.
@@ -49,6 +49,9 @@ Clones `RewardsClaimManager`, initialized with `accessManager` and `plasmaVault`
 ### PriceManagerFactory
 Clones `PriceOracleMiddlewareManager`, initialized with `accessManager` and `priceOracleMiddleware` addresses. Acts as the per-vault price oracle proxy.
 
+### FeeManagerFactory
+Creates `FeeManager` instances. The FeeManager is created during PlasmaVault initialization (not as a separate clone step), but uses this factory internally.
+
 ### ContextManagerFactory
 Clones `ContextManager`, initialized with `accessManager` and an array of `approvedTargets` (PlasmaVault, WithdrawManager, PriceManager, RewardsManager, FeeManager). Created last because it needs all other component addresses.
 
@@ -58,7 +61,7 @@ When `clone()` or `cloneSupervised()` is called:
 
 1. **Validate inputs** -- underlying token and owner must be non-zero.
 2. **Increment factory index** -- each vault gets a unique sequential index.
-3. **Validate base addresses** -- all 6 base implementations must be non-zero.
+3. **Validate base addresses** -- all base implementations must be non-zero.
 4. **Validate DAO fee package** -- selected package index must exist and be valid.
 5. **Clone AccessManager** -- initial authority set to FusionFactory itself.
 6. **Clone PriceManager** -- linked to the new AccessManager and global price oracle middleware.
@@ -75,7 +78,7 @@ When `clone()` or `cloneSupervised()` is called:
     - Add BurnRequestFeeBalanceFuse to PlasmaVault's zero-balance market.
     - Initialize FeeManager.
 13. **Initialize AccessManager** -- configure roles: set owner, optionally set admin array (if supervised), set DAO fee recipient as IPOR DAO. FusionFactory relinquishes authority.
-14. **Emit `FusionInstanceCreated` event** with all addresses and metadata.
+14. **Emit `FusionInstanceCreated` event** with key addresses (PlasmaVault, AccessManager) and metadata (factory index, version).
 15. **Return `FusionInstance` struct** containing all deployed addresses.
 
 ## Factory Extensions
@@ -125,7 +128,7 @@ Extension and price feed factories use `Ownable2Step` (two-step ownership transf
 - The factory index is strictly monotonically increasing (never reused).
 - DAO fee packages: management and performance fees capped at 10000 (100%), fee recipient cannot be zero address.
 - FusionFactory holds temporary authority over the AccessManager only during deployment; authority is transferred to the configured owner/admin in the final initialization step.
-- Price feed factories validate that newly created feeds return valid (non-zero/positive) prices before completing deployment (except `DualCrossReferencePriceFeedFactory`).
+- Price feed factories validate that newly created feeds return valid (non-zero/positive) prices before completing deployment (except `DualCrossReferencePriceFeedFactory` and `CollateralTokenOnMorphoMarketPriceFeedFactory`).
 - `CollateralTokenOnMorphoMarketPriceFeedFactory` enforces uniqueness per `(creator, oracle, collateral, loan, middleware)` tuple.
 - Storage uses ERC-7201 namespaced pattern to prevent slot collisions across upgrades.
 
@@ -139,6 +142,7 @@ Extension and price feed factories use `Ownable2Step` (two-step ownership transf
 - `contracts/factory/RewardsManagerFactory.sol` -- rewards manager creation
 - `contracts/factory/PriceManagerFactory.sol` -- price manager creation
 - `contracts/factory/ContextManagerFactory.sol` -- context manager creation
+- `contracts/factory/FeeManagerFactory.sol` -- fee manager creation
 - `contracts/factory/lib/FusionFactoryLib.sol` -- initialization and clone orchestration
 - `contracts/factory/lib/FusionFactoryLogicLib.sol` -- clone sequencing and final configuration
 - `contracts/factory/lib/FusionFactoryStorageLib.sol` -- ERC-7201 storage layout

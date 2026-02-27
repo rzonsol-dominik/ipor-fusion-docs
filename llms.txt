@@ -1,0 +1,68 @@
+# IPOR Fusion
+
+> Yield optimization framework for automated on-chain asset management. Solidity/Foundry.
+
+## Core
+- [AGENTS.md](AGENTS.md): Project overview, architecture, build commands, conventions
+- [INVARIANTS.md](INVARIANTS.md): Protocol safety invariants (economic, access control, fuse system, withdrawals)
+
+## Core Contracts
+- [PlasmaVault](docs/core/plasma-vault.md): Main ERC4626 vault, deposits, withdrawals, fuse execution
+- [AccessManager](docs/core/access-manager.md): RBAC roles, timelocks, redemption delays
+- [PriceOracle](docs/core/price-oracle.md): Asset pricing, Chainlink + custom feeds
+- [WithdrawManager](docs/core/withdraw-manager.md): Scheduled + instant withdrawals
+- [FeeManager](docs/core/fee-manager.md): Performance (HWM) + management + deposit fees
+- [RewardsClaimManager](docs/core/rewards-claim-manager.md): Reward claiming + vesting
+
+## Patterns
+- [Fuse Pattern](docs/patterns/fuse-pattern.md): How fuses work, types, lifecycle
+- [ERC4626 Pattern](docs/patterns/erc4626-pattern.md): Vault standard extensions
+- [Delegatecall](docs/patterns/delegatecall.md): Architecture, plugin system
+- [Market IDs](docs/patterns/market-ids.md): Complete market ID reference
+
+## Integrations — Lending
+- [Aave V3](docs/integrations/aave-v3.md): Supply, borrow, collateral
+- [Aave V2](docs/integrations/aave-v2.md): Supply (legacy)
+- [Aave V4](docs/integrations/aave-v4.md): Hub & Spoke model
+- [Compound V3](docs/integrations/compound-v3.md): Supply via Comet
+- [Compound V2](docs/integrations/compound-v2.md): Supply via cTokens
+- [Morpho](docs/integrations/morpho.md): Supply, borrow, collateral, flash loans
+- [Euler V2](docs/integrations/euler.md): Supply, borrow, collateral, batch
+- [Moonwell](docs/integrations/moonwell.md): Supply, borrow, market enable
+- [Silo V2](docs/integrations/silo-v2.md): Supply collateral (borrowable/non-borrowable), borrow
+- [Gearbox V3](docs/integrations/gearbox-v3.md): Pool supply, farm staking
+- [Fluid Instadapp](docs/integrations/fluid-instadapp.md): Pool, staking
+- [Liquity V2](docs/integrations/liquity.md): Stability pool
+
+## Integrations — DEX & Liquidity
+- [Uniswap](docs/integrations/uniswap.md): V2 swap, V3 swap, V3 LP positions
+- [Curve](docs/integrations/curve.md): StableSwap NG, LP gauge staking
+- [Balancer](docs/integrations/balancer.md): Proportional/unbalanced liquidity, gauge
+- [Aerodrome](docs/integrations/aerodrome.md): Liquidity, gauge, slipstream positions
+- [Velodrome](docs/integrations/velodrome.md): Superchain liquidity, slipstream
+- [Ramses](docs/integrations/ramses.md): V2 concentrated liquidity positions
+- [Pendle](docs/integrations/pendle.md): PT swap, redeem after maturity
+
+## Integrations — Yield & Staking
+- [ERC4626](docs/integrations/erc4626.md): Generic ERC4626 vault integration
+- [Stake DAO V2](docs/integrations/stake-dao-v2.md): Reward vault staking
+- [Yield Basis](docs/integrations/yield-basis.md): LT token supply
+
+## Integrations — Swappers
+- [Odos](docs/integrations/odos.md): Smart order routing swaps
+- [Velora](docs/integrations/velora.md): ParaSwap Augustus swaps
+- [Enso](docs/integrations/enso.md): DeFi execution engine
+- [Universal Token Swapper](docs/integrations/universal-token-swapper.md): Generic swap executor
+
+## Integrations — Other
+- [Midas](docs/integrations/midas.md): RWA (mTBILL, mBASIS)
+- [Ebisu](docs/integrations/ebisu.md): Trove management
+- [TAC](docs/integrations/tac.md): Staking, delegation
+- [Harvest](docs/integrations/harvest.md): Hard work execution
+- [Lido](docs/integrations/lido.md): Ethereum staking
+- [Spark](docs/integrations/spark.md): Spark protocol
+- [Async Action](docs/integrations/async-action.md): Multi-step async operations
+- [Maintenance](docs/integrations/maintenance.md): Instant withdrawal config, withdraw manager updates
+
+## Rewards
+- [Rewards Overview](docs/rewards/rewards-overview.md): Reward system architecture + all claim fuses

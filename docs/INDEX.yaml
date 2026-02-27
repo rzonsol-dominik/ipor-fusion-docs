@@ -1,0 +1,199 @@
+# IPOR Fusion Documentation Index
+# AI agent: read this first, then load only files relevant to your query.
+
+project: ipor-fusion
+type: defi-yield-optimizer
+lang: solidity-0.8.30
+framework: foundry
+license: BUSL-1.1
+source: https://github.com/IPOR-Labs/ipor-fusion
+
+entry_points:
+  - file: ../AGENTS.md
+    desc: "Project overview, architecture, build commands, conventions"
+  - file: ../INVARIANTS.md
+    desc: "Protocol safety invariants (economic, access, fuse, withdrawal, rewards, oracle)"
+
+core:
+  - file: core/plasma-vault.md
+    desc: "Main ERC4626 vault — deposits, withdrawals, fuse execution, governance"
+    contracts: [PlasmaVault.sol, PlasmaVaultBase.sol, PlasmaVaultGovernance.sol]
+
+  - file: core/access-manager.md
+    desc: "RBAC roles (ADMIN, OWNER, GUARDIAN, ATOMIST, ALPHA), timelocks, redemption delays"
+    contracts: [IporFusionAccessManager.sol, Roles.sol]
+
+  - file: core/price-oracle.md
+    desc: "Asset pricing — Chainlink + custom feeds, 18-decimal WAD USD output"
+    contracts: [PriceOracleMiddleware.sol]
+
+  - file: core/withdraw-manager.md
+    desc: "Scheduled withdrawals (request→release→window) + instant from unallocated"
+    contracts: [WithdrawManager.sol]
+
+  - file: core/fee-manager.md
+    desc: "Performance fee (HWM), management fee (time-based), deposit fee"
+    contracts: [FeeManager.sol, FeeAccount.sol]
+
+  - file: core/rewards-claim-manager.md
+    desc: "Reward claiming, vesting, distribution to vault"
+    contracts: [RewardsClaimManager.sol]
+
+patterns:
+  - file: patterns/fuse-pattern.md
+    desc: "Fuse lifecycle, types (supply/borrow/collateral/LP/swap/balance), security model"
+
+  - file: patterns/erc4626-pattern.md
+    desc: "ERC4626 vault standard + PlasmaVault extensions"
+
+  - file: patterns/delegatecall.md
+    desc: "Delegatecall architecture, plugin system, security implications"
+
+  - file: patterns/market-ids.md
+    desc: "Complete market ID reference table with dependency graph"
+
+integrations:
+  lending:
+    - file: integrations/aave-v3.md
+      desc: "Supply/borrow/collateral via Aave V3 Pool"
+      market_ids: [1]
+
+    - file: integrations/aave-v2.md
+      desc: "Supply via Aave V2 (legacy, Ethereum-only)"
+      market_ids: []
+
+    - file: integrations/aave-v4.md
+      desc: "Supply/borrow/emode via Aave V4 Hub & Spoke"
+      market_ids: [45]
+
+    - file: integrations/compound-v3.md
+      desc: "Supply via Compound V3 Comet (USDC/USDT/WETH)"
+      market_ids: [2, 13, 26]
+
+    - file: integrations/compound-v2.md
+      desc: "Supply via Compound V2 cTokens (legacy)"
+      market_ids: []
+
+    - file: integrations/morpho.md
+      desc: "Supply/borrow/collateral/flashloan via Morpho Blue"
+      market_ids: [14, 19, 41]
+
+    - file: integrations/euler.md
+      desc: "Supply/borrow/collateral/batch via Euler V2 (EVC sub-accounts)"
+      market_ids: [11]
+
+    - file: integrations/moonwell.md
+      desc: "Supply/borrow/enableMarket via Moonwell (Compound V2 fork)"
+      market_ids: [21]
+
+    - file: integrations/silo-v2.md
+      desc: "Supply collateral (borrowable + non-borrowable) and borrow"
+      market_ids: [35]
+
+    - file: integrations/gearbox-v3.md
+      desc: "Pool supply and farm dToken staking"
+      market_ids: [3, 4]
+
+    - file: integrations/fluid-instadapp.md
+      desc: "fToken pool and staking"
+      market_ids: [5, 6]
+
+    - file: integrations/liquity.md
+      desc: "BOLD stability pool deposits + collateral gain tracking"
+      market_ids: [29]
+
+  dex:
+    - file: integrations/uniswap.md
+      desc: "V2 swap, V3 swap, V3 concentrated liquidity positions"
+      market_ids: [8, 9, 10]
+
+    - file: integrations/curve.md
+      desc: "StableSwap NG single-side supply, LP gauge staking"
+      market_ids: [16, 17, 25]
+
+    - file: integrations/balancer.md
+      desc: "Proportional/unbalanced/single-token liquidity, gauge staking"
+      market_ids: [36]
+
+    - file: integrations/aerodrome.md
+      desc: "AMM liquidity + gauge + Slipstream concentrated LP"
+      market_ids: [30, 33]
+
+    - file: integrations/velodrome.md
+      desc: "Superchain AMM liquidity + Slipstream concentrated LP"
+      market_ids: [31, 32]
+
+    - file: integrations/ramses.md
+      desc: "V2 concentrated liquidity positions (Uniswap V3 fork)"
+      market_ids: [18]
+
+    - file: integrations/pendle.md
+      desc: "PT token swap + redeem after maturity"
+      market_ids: [23]
+
+  yield:
+    - file: integrations/erc4626.md
+      desc: "Generic ERC4626 vault supply/withdraw (20 market slots)"
+      market_ids: [100001, 100002, "...", 100020]
+
+    - file: integrations/stake-dao-v2.md
+      desc: "Stake DAO reward vault staking (nested ERC4626)"
+      market_ids: [34]
+
+    - file: integrations/yield-basis.md
+      desc: "Yield Basis LT token supply (non-ERC4626 leveraged)"
+      market_ids: [37]
+
+  swappers:
+    - file: integrations/odos.md
+      desc: "Smart order routing swaps via Odos V3 router"
+      market_ids: [42]
+
+    - file: integrations/velora.md
+      desc: "ParaSwap Augustus v6.2 swaps"
+      market_ids: [43]
+
+    - file: integrations/enso.md
+      desc: "DeFi execution engine (multi-call, delegated shortcuts)"
+      market_ids: [38]
+
+    - file: integrations/universal-token-swapper.md
+      desc: "Generic swap executor with target validation"
+      market_ids: [12]
+
+  other:
+    - file: integrations/midas.md
+      desc: "RWA tokens (mTBILL, mBASIS) — deposit/redeem/instant redeem"
+      market_ids: [45]
+
+    - file: integrations/ebisu.md
+      desc: "Trove management — create, adjust, lever modify"
+      market_ids: [39]
+
+    - file: integrations/tac.md
+      desc: "Staking delegation, redelegation, emergency unstake"
+      market_ids: [28]
+
+    - file: integrations/harvest.md
+      desc: "Harvest Finance hard work trigger"
+      market_ids: [27]
+
+    - file: integrations/lido.md
+      desc: "ETH → stETH wrapping (Ethereum-only)"
+      market_ids: []
+
+    - file: integrations/spark.md
+      desc: "Spark protocol supply/withdraw (Aave V3 fork, Ethereum)"
+      market_ids: [15]
+
+    - file: integrations/async-action.md
+      desc: "Multi-step async operations via AsyncExecutor"
+      market_ids: [40]
+
+    - file: integrations/maintenance.md
+      desc: "Configure instant withdrawal fuses order, update withdraw manager"
+      market_ids: []
+
+rewards:
+  - file: rewards/rewards-overview.md
+    desc: "Reward system architecture, all 16 claim fuses, vesting mechanism"

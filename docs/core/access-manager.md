@@ -41,10 +41,15 @@ initialize(InitializationData) — ADMIN only, one-time. Sets up all role→func
 canCallAndUpdate(caller, target, selector) → (bool immediate, uint32 delay)
   — Checks permission + updates redemption delay state.
 updateTargetClosed(target, closed) — GUARDIAN. Emergency pause.
-convertToPublicVault(vault) — Sets deposit/mint to PUBLIC_ROLE.
+convertToPublicVault(vault) — Sets deposit/mint/depositWithPermit to PUBLIC_ROLE.
 enableTransferShares(vault) — Sets transfer/transferFrom to PUBLIC_ROLE.
 grantRole(roleId, account, executionDelay) — Validates delay >= minimalExecutionDelay.
 setMinimalExecutionDelaysForRoles(roleIds[], delays[])
+proxyInitialize(address initialAdmin, uint256 redemptionDelayInSeconds) — clone-based init
+getMinimalExecutionDelayForRole(uint64 roleId) → uint256
+getAccountLockTime(address account) → uint256
+isConsumingScheduledOp() → bytes4
+MAX_REDEMPTION_DELAY_IN_SECONDS = 7 days (constant)
 ```
 
 ## Security Features

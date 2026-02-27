@@ -67,11 +67,15 @@ struct FuseAction {
 ```solidity
 interface IFuseCommon {
     function MARKET_ID() external view returns (uint256);
-    function VERSION() external view returns (uint256);
+}
+
+interface IFuse {
+    function enter(bytes calldata data_) external;
+    function exit(bytes calldata data_) external;
 }
 ```
 
-All fuses expose MARKET_ID (links to IporFusionMarkets constant) and VERSION.
+All fuses expose `MARKET_ID()` (links to IporFusionMarkets constant). `enter`/`exit` accept raw `bytes calldata` which is ABI-decoded into fuse-specific structs internally. Most fuse implementations also have `address public immutable VERSION = address(this)` for transient storage identification (not part of the interface).
 
 ## Substrate Validation
 Before a fuse can operate, the market must have granted substrates:

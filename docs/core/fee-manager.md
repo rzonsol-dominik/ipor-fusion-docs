@@ -11,8 +11,9 @@
 ### Performance Fee (High Water Mark)
 - Only charged on gains above HWM
 - HWM = highest exchange rate (assets per 1 share unit)
-- `calculateAndUpdatePerformanceFee(exchangeRate, totalSupply, fee, assetDecimals)`
-- If rate > HWM: `feeShares = totalSupply * (rate - HWM) / rate * fee / 10000`
+- `calculateAndUpdatePerformanceFee(uint128 exchangeRate, totalSupply, fee, assetDecimals)`
+- Note: `assetDecimals` is unused (retained for ABI backward compatibility)
+- If rate > HWM: `feeShares = Math.mulDiv(totalSupply * (rate - HWM), fee, rate * 10000)`
 - If rate <= HWM and updateInterval elapsed: HWM lowered to current rate
 - If rate <= HWM and updateInterval = 0: HWM stays (manual update only)
 - Minted shares go to PERFORMANCE_FEE_ACCOUNT
@@ -58,6 +59,17 @@ updateIntervalHighWaterMarkPerformanceFee(uint32 interval) — auto-lower HWM in
 ## Updatable (IPOR_DAO_ROLE)
 ```
 setIporDaoFeeRecipientAddress(address) — DAO fee recipient
+```
+
+## View Functions
+```
+getManagementFeeRecipients() → RecipientFee[]
+getPerformanceFeeRecipients() → RecipientFee[]
+getTotalManagementFee() → uint256
+getTotalPerformanceFee() → uint256
+getIporDaoFeeRecipientAddress() → address
+getDepositFee() → uint256
+getPlasmaVaultHighWaterMarkPerformanceFee() → HighWaterMarkPerformanceFeeStorage
 ```
 
 ## Related Files

@@ -66,16 +66,24 @@ canWithdrawFromUnallocated(uint256 shares) → uint256 feeSharesToBurn
 ```
 1. User calls PlasmaVault.withdraw/redeem
 2. Vault calls canWithdrawFromUnallocated(shares)
-3. Check: vault's underlying balance - sharesToRelease >= shares
-4. Apply withdraw fee if configured
+3. Check (in share terms): convertToShares(vaultBalance) - sharesToRelease >= shares
+   Note: if sharesToRelease == 0, any amount can be withdrawn from unallocated
+4. Apply withdraw fee if configured (returns feeSharesToBurn)
 5. Withdraw proceeds
+```
+
+### Additional Functions
+```
+updatePlasmaVaultAddress(address plasmaVaultAddress) — restricted
+getPlasmaVaultAddress() → address
 ```
 
 ## Key Invariants
 - Pending requests NOT released by governance do NOT reduce unallocated balance
 - Only sharesToRelease is reserved from unallocated
 - Request fee deducted at request time (transferred to WithdrawManager)
-- Withdraw fee deducted at withdrawal time (burned via BurnRequestFeeFuse)
+- Withdraw fee on instant withdrawals: shares burned directly by PlasmaVault._burn()
+- Withdraw fee on request withdrawals: burned via BurnRequestFeeFuse
 - Both fees capped at 1e18 (100%), WAD precision
 
 ## Related Files

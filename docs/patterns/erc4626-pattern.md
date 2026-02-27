@@ -27,7 +27,7 @@ maxDeposit/maxMint/maxWithdraw/maxRedeem — capacity limits
 
 ## Share Price Calculation
 ```
-totalAssets = liquid underlying balance + sum(marketBalances in USD → converted to underlying)
+totalAssets = liquid underlying balance + sum(marketBalances) + RewardsClaimManager.balanceOf()
 sharePrice = totalAssets / totalSupply
 ```
 
@@ -35,5 +35,5 @@ Market balances are read via delegatecall to balance fuses, each returning WAD U
 
 ## Key Difference from Standard ERC4626
 - Withdrawal may fail if assets are deployed in protocols (not liquid in vault)
-- Alpha must execute fuse exits or releaseFunds to make assets available
+- Alpha must execute fuse exits to make assets available
 - Instant withdrawal only from "unallocated" balance (vault's direct token holdings minus sharesToRelease)

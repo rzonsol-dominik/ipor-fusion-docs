@@ -10,7 +10,7 @@ PlasmaVault.execute(FuseAction[] actions)
 ```
 
 This means:
-- Fuse code runs with vault's `address(this)`, `msg.sender`, and storage
+- Fuse code runs with vault's `address(this)` and storage; `msg.sender` is preserved from the original caller
 - Fuse can read/write vault's token balances
 - Fuse can approve external protocols on behalf of vault
 - Fuse's own storage is NOT accessed

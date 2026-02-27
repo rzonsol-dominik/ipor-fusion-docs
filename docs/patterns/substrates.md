@@ -14,8 +14,8 @@ PlasmaVaultGovernance.grantMarketSubstrates(uint256 marketId, bytes32[] substrat
   — Atomic: revokes ALL existing substrates, then grants new ones
   — Emits MarketSubstratesGranted(marketId, substrates)
 
-PlasmaVaultGovernance.grantSubstratesAsAssetsToMarket(uint256 marketId, address[] assets)
-  — Convenience: auto-converts addresses to bytes32 substrates
+Note: PlasmaVaultConfigLib has an internal helper `grantSubstratesAsAssetsToMarket()` that auto-converts
+addresses to bytes32, but this is NOT exposed as an external governance function.
 ```
 
 ### Checking (called by fuses during execution)

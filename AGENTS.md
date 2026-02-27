@@ -59,6 +59,10 @@ IporFusionAccessManager (OpenZeppelin AccessManager extended)
 | WithdrawManager | managers/withdraw/WithdrawManager.sol | Scheduled + instant withdrawals |
 | RewardsClaimManager | managers/rewards/RewardsClaimManager.sol | Reward claiming + vesting |
 | PriceOracleMiddleware | price_oracle/PriceOracleMiddleware.sol | Asset pricing, Chainlink + custom |
+| PreHooksHandler | handlers/pre_hooks/PreHooksHandler.sol | Pre-execution hooks (rate validation, pause) |
+| FusionFactory | factory/FusionFactory.sol | Atomic vault deployment orchestrator |
+| ContextManager | managers/context/ContextManager.sol | Cross-contract sender identity |
+| UniversalReader | universal_reader/UniversalReader.sol | Off-chain delegatecall queries |
 
 ## Conventions
 - Solidity 0.8.30, OpenZeppelin v5 (upgradeable)

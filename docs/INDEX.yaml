@@ -39,6 +39,30 @@ core:
     desc: "Reward claiming, vesting, distribution to vault"
     contracts: [RewardsClaimManager.sol]
 
+  - file: core/pre-hooks.md
+    desc: "PreHooks extensibility framework + callback handlers (Morpho, Euler)"
+    contracts: [PreHooksHandler.sol, PreHooksLib.sol, ExchangeRateValidatorPreHook.sol, PauseFunctionPreHook.sol, CallbackHandlerMorpho.sol, CallbackHandlerEuler.sol]
+
+  - file: core/factory.md
+    desc: "Vault deployment orchestration — FusionFactory, component factories, price feed factories"
+    contracts: [FusionFactory.sol, PlasmaVaultFactory.sol, AccessManagerFactory.sol]
+
+  - file: core/readers.md
+    desc: "Off-chain query layer — UniversalReader, balance fuse readers, config readers"
+    contracts: [UniversalReader.sol, ReadBalanceFuses.sol, BalanceFusesReader.sol]
+
+  - file: core/vault-extensions.md
+    desc: "Vault wrappers — WrappedPlasmaVault (fees), WhitelistWrappedPlasmaVault, ReferralPlasmaVault"
+    contracts: [WrappedPlasmaVault.sol, WhitelistWrappedPlasmaVault.sol, ReferralPlasmaVault.sol]
+
+  - file: core/zaps.md
+    desc: "Single-tx deposit helpers — ERC4626ZapIn, native ETH support, allowance pattern"
+    contracts: [ERC4626ZapIn.sol, ERC4626ZapInWithNativeToken.sol, ERC4626ZapInAllowance.sol]
+
+  - file: core/context-manager.md
+    desc: "Cross-contract context preservation — sender identity, ECDSA execution, approved targets"
+    contracts: [ContextManager.sol, ContextClient.sol]
+
 patterns:
   - file: patterns/fuse-pattern.md
     desc: "Fuse lifecycle, types (supply/borrow/collateral/LP/swap/balance), security model"
@@ -54,6 +78,9 @@ patterns:
 
   - file: patterns/substrates.md
     desc: "Market substrate system — encoding patterns, per-market reference, security model"
+
+  - file: patterns/transient-storage.md
+    desc: "EIP-1153 transient storage for inter-fuse data passing within single transaction"
 
 integrations:
   lending:

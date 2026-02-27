@@ -13,6 +13,12 @@
 - [WithdrawManager](docs/core/withdraw-manager.md): Scheduled + instant withdrawals
 - [FeeManager](docs/core/fee-manager.md): Performance (HWM) + management + deposit fees
 - [RewardsClaimManager](docs/core/rewards-claim-manager.md): Reward claiming + vesting
+- [PreHooks & Handlers](docs/core/pre-hooks.md): PreHooks extensibility, callback handlers (Morpho, Euler)
+- [Factory](docs/core/factory.md): Vault deployment orchestration, component factories
+- [Readers](docs/core/readers.md): Off-chain query layer, UniversalReader
+- [Vault Extensions](docs/core/vault-extensions.md): WrappedPlasmaVault, whitelist, referral
+- [Zaps](docs/core/zaps.md): Single-tx deposit helpers, native ETH support
+- [ContextManager](docs/core/context-manager.md): Cross-contract context preservation
 
 ## Patterns
 - [Fuse Pattern](docs/patterns/fuse-pattern.md): How fuses work, types, lifecycle
@@ -20,6 +26,7 @@
 - [Delegatecall](docs/patterns/delegatecall.md): Architecture, plugin system
 - [Market IDs](docs/patterns/market-ids.md): Complete market ID reference
 - [Substrates](docs/patterns/substrates.md): Market substrate system — encoding, per-market reference, security
+- [Transient Storage](docs/patterns/transient-storage.md): EIP-1153 inter-fuse data passing
 
 ## Integrations — Lending
 - [Aave V3](docs/integrations/aave-v3.md): Supply, borrow, collateral

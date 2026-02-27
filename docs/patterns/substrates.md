@@ -57,7 +57,7 @@ Fuse checks: `PlasmaVaultConfigLib.isSubstrateAsAssetGranted(marketId, tokenAddr
 ### Pattern 2: Type-Flagged Address (MSB = type byte)
 Layout: `[type 8 bits][padding 88 bits][address 160 bits]`
 
-Used by: **Aave V4**, **Balancer**, **Midas**, **Ebisu**, **Velodrome Slipstream**
+Used by: **Aave V4**, **Balancer**, **Midas**, **Ebisu**, **Aerodrome AMM**, **Aerodrome Slipstream**, **Velodrome Superchain AMM**, **Velodrome Slipstream**
 
 #### Aave V4 (AaveV4SubstrateLib)
 ```
@@ -90,6 +90,28 @@ Encode: EbisuZapperSubstrateLib.substrateToBytes32({substrateType, substrateAddr
 Layout: [type 96 bits | address 160 bits]
 ```
 Balance fuse iterates only ZAPPER-type substrates.
+
+#### Aerodrome AMM (AreodromeLib)
+```
+Types: Gauge (1), Pool (2)
+Encode: AreodromeLib.substrateToBytes32({substrateType, substrateAddress})
+Layout: [type 96 bits | address 160 bits]
+```
+
+#### Aerodrome Slipstream (AreodromeSlipstreamLib)
+```
+Types: Gauge (1), Pool (2)
+Encode: AreodromeSlipstreamLib.substrateToBytes32({substrateType, substrateAddress})
+Layout: [type 96 bits | address 160 bits]
+Also: getPoolAddress(factory, token0, token1, tickSpacing) — resolves pool with code-existence check.
+```
+
+#### Velodrome Superchain AMM (VelodromeSuperchainLib)
+```
+Types: Gauge (1), Pool (2)
+Encode: VelodromeSuperchainLib.substrateToBytes32({substrateType, substrateAddress})
+Layout: [type 96 bits | address 160 bits]
+```
 
 #### Velodrome Slipstream (VelodromeSuperchainSlipstreamSubstrateLib)
 ```
@@ -171,10 +193,10 @@ Encoded via `AsyncActionFuseLib.encodeAsyncActionFuseSubstrate(...)`.
 | 23 | PENDLE | Plain address | Market / PT addresses |
 | 28 | TAC_STAKING | Plain address | Validator addresses |
 | 29 | LIQUITY_V2 | Plain address | StabilityPool addresses |
-| 30 | AERODROME | Plain address | Pool / gauge addresses |
-| 31 | VELODROME_SUPERCHAIN | Plain address | Pool / gauge addresses |
+| 30 | AERODROME | Type-flagged | Gauge + Pool typed substrates (AreodromeLib) |
+| 31 | VELODROME_SUPERCHAIN | Type-flagged | Gauge + Pool typed substrates (VelodromeSuperchainLib) |
 | 32 | VELODROME_SLIPSTREAM | Type-flagged | Gauge + Pool typed substrates |
-| 33 | AERODROME_SLIPSTREAM | Plain address | Pool / gauge addresses |
+| 33 | AERODROME_SLIPSTREAM | Type-flagged | Gauge + Pool typed substrates (AreodromeSlipstreamLib) |
 | 34 | STAKE_DAO_V2 | Plain address | Reward vault addresses |
 | 35 | SILO_V2 | Plain address | SiloConfig addresses |
 | 36 | BALANCER | Type-flagged | GAUGE + POOL + TOKEN typed substrates |

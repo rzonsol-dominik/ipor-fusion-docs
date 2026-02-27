@@ -1,9 +1,9 @@
 # PlasmaVault
 
 ## Quick Reference
-- Source: `contracts/vaults/PlasmaVault.sol` (~700 lines)
+- Source: `contracts/vaults/PlasmaVault.sol` (~1600 lines)
 - Base: `contracts/vaults/PlasmaVaultBase.sol` (ERC20/Permit/Votes via delegatecall)
-- Governance: `contracts/vaults/PlasmaVaultGovernance.sol` (~800 lines)
+- Governance: `contracts/vaults/PlasmaVaultGovernance.sol` (~1700 lines)
 - Inherits: ERC4626Upgradeable, ReentrancyGuardUpgradeable, AccessManagedUpgradeable
 - Proxy: UUPS upgradeable
 
@@ -26,6 +26,10 @@ withdraw(uint256 assets, address owner, address receiver) → uint256 shares
 redeem(uint256 shares, address owner, address receiver) → uint256 assets
   — Same dual-path as withdraw, but burns exact shares.
 
+redeemFromRequest(uint256 shares, address owner, address receiver) → uint256 assets
+  — Redeem shares from a scheduled withdrawal request only (no instant path).
+  — Validates via WithdrawManager.canWithdrawFromRequest, charges withdraw fee.
+
 depositWithPermit(uint256 assets, address receiver, ...) → uint256 shares
   — ERC2612 permit + deposit in one tx.
 
@@ -41,25 +45,42 @@ execute(FuseAction[] calldata actions_)
   — Checks asset distribution limits, reverts on violation.
   — NonReentrant.
 
-executeWithContext(FuseAction[] calldata actions_, address contextTarget_, bytes calldata contextData_)
-  — Like execute() but first calls contextTarget with contextData (for setting up transient storage etc.)
 ```
 
-### Governance (ATOMIST_ROLE via PlasmaVaultGovernance)
+### Governance (PlasmaVaultGovernance)
 ```
+— FUSE_MANAGER_ROLE (300):
 addFuses(address[] fuses_) / removeFuses(address[] fuses_)
 addBalanceFuse(uint256 marketId, address fuse) / removeBalanceFuse(uint256 marketId, address fuse)
+
+— ATOMIST_ROLE (100):
 grantMarketSubstrates(uint256 marketId, bytes32[] substrates)
 configurePerformanceFee(address feeAccount, uint256 feeInPercentage)
 configureManagementFee(address feeAccount, uint256 feeInPercentage)
 setPriceOracleMiddleware(address oracle)
-configureInstantWithdrawalFuses(InstantWithdrawalFusesParamsStruct[])
 setTotalSupplyCap(uint256 cap)
-updateMarketsBalances(uint256[] marketIds)
-activateMarketsLimits(MarketLimit[] limits) / deactivateMarketsLimits(uint256[] marketIds)
-setWithdrawManager(address) / setRewardsClaimManager(address) / setFeeManager(address)
+setupMarketsLimits(MarketLimit[] marketsLimits)
+activateMarketsLimits() / deactivateMarketsLimits()   — no parameters
+setRewardsClaimManagerAddress(address)
 convertToPublicVault() / enableTransferShares()
-addPreHook(bytes4 selector, address hook) / removePreHook(bytes4 selector)
+updateDependencyBalanceGraphs(uint256[] marketIds, uint256[][] dependencies)
+updateCallbackHandler(address handler, address sender, bytes4 sig)
+
+— CONFIG_INSTANT_WITHDRAWAL_FUSES_ROLE (900):
+configureInstantWithdrawalFuses(InstantWithdrawalFusesParamsStruct[])
+
+— UPDATE_MARKETS_BALANCES_ROLE (1000):
+updateMarketsBalances(uint256[] marketIds)
+
+— PRE_HOOKS_MANAGER_ROLE (301):
+setPreHookImplementations(bytes4[] selectors, address[] implementations, bytes32[][] substrates)
+
+— View functions (no role):
+getMarketSubstrates(marketId), getFuses(), getPriceOracleMiddleware(),
+getPerformanceFeeData(), getManagementFeeData(), getAccessManagerAddress(),
+getRewardsClaimManagerAddress(), getInstantWithdrawalFuses(), getMarketLimit(marketId),
+getDependencyBalanceGraph(marketId), getTotalSupplyCap(), isMarketsLimitsActivated(),
+isFuseSupported(fuse), isBalanceFuseSupported(marketId, fuse), isMarketSubstrateGranted(marketId, substrate)
 ```
 
 ## State

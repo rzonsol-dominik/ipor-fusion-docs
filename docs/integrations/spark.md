@@ -42,7 +42,7 @@ SparkSupplyFuse:
 
 ## Substrate Configuration
 
-No special substrate validation for enter/exit operations (DAI and sDAI are hardcoded). The balance fuse verifies sDAI is granted as a substrate.
+No substrate validation in any fuse (DAI and sDAI are hardcoded). The balance fuse reads sDAI balance directly without substrate checks.
 
 ## Balance Tracking
 

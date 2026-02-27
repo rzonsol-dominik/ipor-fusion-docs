@@ -28,6 +28,8 @@
 | 700 | TRANSFER_REWARDS_ROLE | Atomist | Transfer rewards |
 | 800 | WHITELIST_ROLE | Atomist | Deposit/withdraw access |
 | 900 | CONFIG_INSTANT_WITHDRAWAL_FUSES_ROLE | Atomist | Configure instant withdrawal order |
+| 901 | WITHDRAW_MANAGER_REQUEST_FEE_ROLE | Atomist | Update withdrawal request fees |
+| 902 | WITHDRAW_MANAGER_WITHDRAW_FEE_ROLE | Atomist | Update withdrawal withdraw fees |
 | 1000 | UPDATE_MARKETS_BALANCES_ROLE | Atomist | Update market balances |
 | 1100 | UPDATE_REWARDS_BALANCE_ROLE | Atomist | Update rewards balance |
 | 1200 | PRICE_ORACLE_MIDDLEWARE_MANAGER_ROLE | Atomist | Manage price oracle |

@@ -30,7 +30,7 @@ enter(tokenInAmount, minOutAmount, path)
 ### UniswapV3NewPositionFuse (Market ID: 8)
 ```
 enter(token0, token1, fee, tickLower, tickUpper, amount0Desired, amount1Desired, amount0Min, amount1Min, deadline)
-  -> returns (tokenId, liquidity, amount0, amount1)
+  -> returns (tokenId, liquidity, amount0, amount1, token0, token1, fee, tickLower, tickUpper)
   - Mints new NFT via NonfungiblePositionManager.mint()
   - Stores tokenId in FuseStorageLib for balance tracking
   - Both tokens must be granted substrates

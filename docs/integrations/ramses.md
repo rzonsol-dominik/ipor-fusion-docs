@@ -46,7 +46,8 @@ enter(tokenIds[])
 - For each position: gets token0, token1, fee from position manager
 - Gets sqrtPriceX96 from pool slot0
 - Calculates position value using LiquidityAmounts and TickMath libraries
-- Includes principal liquidity value only (fees via separate mechanism)
+- Includes principal liquidity value + accumulated fees + tokensOwed
+- Fee calculation via `_calculateFees()` using pool's feeGrowthGlobal, tick feeGrowthOutside, and position feeGrowthInside
 - Converts to USD via PriceOracleMiddleware, returns WAD
 
 ## Key Invariants
@@ -57,7 +58,7 @@ enter(tokenIds[])
 
 ## Risks & Edge Cases
 - veRamTokenId boosting: incorrect token ID may reduce rewards
-- Position burn requires zero liquidity and all fees collected
+- Position burn requires zero liquidity and all fees collected (no dust check unlike Uniswap V3)
 - Ramses uses its own PositionManager interface (slightly different from Uniswap's)
 - Fee calculation may differ from Uniswap V3 due to Ramses-specific modifications
 

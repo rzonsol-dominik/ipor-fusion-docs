@@ -64,16 +64,18 @@ getUnrealizedManagementFee(totalAssets) → uint256
 updateMarketsBalances(uint256[] markets, address asset, uint256 decimals, uint256 decimalsOffset)
   → DataToCheck
   — Fetches balance from each market's balance fuse via delegatecall, converts USD WAD to
-    underlying decimals using price oracle, updates per-market and total asset tracking.
-    Resolves balance fuse dependency graphs (transitive).
+    underlying decimals using price oracle, updates per-market tracking via
+    PlasmaVaultLib.addToTotalAssetsInAllMarkets(). Resolves balance fuse dependency graphs
+    (transitive). Note: returned DataToCheck.totalBalanceInVault is NOT populated (stays 0);
+    per-market balances are in marketsToCheck[].
 
-withdrawFromMarkets(address asset, uint256 assets, uint256 vaultBalance)
+withdrawFromMarkets(address asset, uint256 assets, uint256 vaultCurrentBalanceUnderlying)
   → uint256[] markets
   — Iterates instant withdrawal fuses in order, delegatecalling instantWithdraw(bytes32[])
     until the required amount is covered. Returns unique market IDs touched.
 ```
 
-**Internal helpers**: `_checkBalanceFusesDependencies` (transitive dependency resolution), `_filterZeroMarkets`, `_getUniqueElements`.
+**Internal helpers**: `_checkBalanceFusesDependencies` (transitive dependency resolution), `_filterZeroMarkets`, `_getUniqueElements`, `_checkIfExistsMarket`, `_increaseArray`, `_contains`.
 
 ### ERC20VotesUpgradeable
 - Source: `contracts/vaults/ERC20VotesUpgradeable.sol`
@@ -109,7 +111,7 @@ toBytes32(bytes memory) / toBytes(bytes32)
 
 **Note**: `toBytes32(bytes)` uses assembly for efficiency. Input shorter than 32 bytes is zero-padded right. Empty input returns `0x0`.
 
-**Enum**: `DataType` -- declares type tags (UINT256, ADDRESS, BOOL, etc.) for runtime type discrimination.
+**Enum**: `DataType` -- 16 members for runtime type discrimination: UNKNOWN, UINT256, UINT128, UINT64, UINT32, UINT16, UINT8, INT256, INT128, INT64, INT32, INT16, INT8, ADDRESS, BOOL, BYTES32.
 
 ### StringConverter
 - Source: `contracts/libraries/StringConverter.sol`
@@ -189,7 +191,7 @@ SET_ASSETS_PRICES_SOURCES = keccak256("SET_ASSETS_PRICES_SOURCES")
   — Allows setting asset price feed sources.
 ```
 
-**Pattern**: Constructor calls `_disableInitializers()`. Must be initialized through proxy via `__IporFusionAccessControl_init()` which grants deployer the default admin role.
+**Pattern**: Constructor calls `_disableInitializers()`. Must be initialized through proxy via `__IporFusionAccessControl_init()` which calls `__AccessControlEnumerable_init()`. Note: this init does NOT grant the deployer any roles — the concrete inheriting contract must grant DEFAULT_ADMIN_ROLE separately.
 
 ---
 
@@ -225,6 +227,7 @@ validatePriceChange(address asset, uint256 price) → bool baselineUpdated
   — Updates baseline when delta > maxPriceDelta/2 (rolling baseline strategy).
 isPriceValidationSupported(address asset) → bool
 getPriceValidationInfo(address asset) → (maxPriceDelta, lastValidatedPrice, lastValidatedTimestamp)
+getConfiguredPriceValidationAssets() → address[] — Returns all assets with price validation configured.
 ```
 
 ---
@@ -267,7 +270,7 @@ getPriceValidationInfo(address asset) → (maxPriceDelta, lastValidatedPrice, la
 - Purpose: Canonical ID and name registry for all known fuse implementations (105 fuse types).
 - Used by: Deployment scripts, fuse metadata registration
 
-**Coverage**: Aave V2/V3, Compound V2/V3, Curve, ERC20, ERC4626 (14 market variants), Euler V2, Fluid Instadapp, Gearbox V3, Harvest, Moonwell, Morpho, Pendle, Ramses V2, Uniswap V2/V3, Universal Token Swapper, Meta Morpho, and Plasma Vault internal fuses.
+**Coverage**: Aave V2/V3, Compound V2/V3, Curve, ERC20, ERC4626 (14 market variants), Euler V2, Fluid Instadapp, Gearbox V3, Harvest, Moonwell, Morpho, Pendle, Ramses V2, Spark, Uniswap V2/V3, Universal Token Swapper, Meta Morpho, Burn Request Fee, Universal Reader, and Plasma Vault internal fuses.
 
 **Functions**: `getAllFuseIds() → uint16[]`, `getAllFuseNames() → string[]`.
 

@@ -63,6 +63,7 @@ IporFusionAccessManager (OpenZeppelin AccessManager extended)
 | FusionFactory | factory/FusionFactory.sol | Atomic vault deployment orchestrator |
 | ContextManager | managers/context/ContextManager.sol | Cross-contract sender identity |
 | UniversalReader | universal_reader/UniversalReader.sol | Off-chain delegatecall queries |
+| FuseWhitelist | fuses/whitelist/FuseWhitelist.sol | Global fuse registry + metadata |
 
 ## Conventions
 - Solidity 0.8.30, OpenZeppelin v5 (upgradeable)

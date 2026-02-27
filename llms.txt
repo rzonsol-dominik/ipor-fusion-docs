@@ -19,6 +19,9 @@
 - [Vault Extensions](docs/core/vault-extensions.md): WrappedPlasmaVault, whitelist, referral
 - [Zaps](docs/core/zaps.md): Single-tx deposit helpers, native ETH support
 - [ContextManager](docs/core/context-manager.md): Cross-contract context preservation
+- [Fuse Whitelist](docs/core/fuse-whitelist.md): Global fuse registry, types, states, metadata
+- [Utility Fuses](docs/core/utility-fuses.md): Cross-vault requests, balance updates, validation, fee burns
+- [Internal Libraries](docs/core/internal-libraries.md): Vault fees, market balances, asset distribution, type conversion, deploy metadata
 
 ## Patterns
 - [Fuse Pattern](docs/patterns/fuse-pattern.md): How fuses work, types, lifecycle

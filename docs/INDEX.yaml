@@ -63,6 +63,18 @@ core:
     desc: "Cross-contract context preservation — sender identity, ECDSA execution, approved targets"
     contracts: [ContextManager.sol, ContextClient.sol]
 
+  - file: core/fuse-whitelist.md
+    desc: "Global fuse registry — addresses, types, states, metadata, market associations"
+    contracts: [FuseWhitelist.sol, FuseWhitelistAccessControl.sol, FuseWhitelistLib.sol]
+
+  - file: core/utility-fuses.md
+    desc: "Internal/utility fuses — cross-vault requests, balance updates, validation, fee burns"
+    contracts: [PlasmaVaultRequestSharesFuse.sol, PlasmaVaultRedeemFromRequestFuse.sol, UpdateMarketsBalancesFuse.sol, ZeroBalanceFuse.sol, PlasmaVaultBalanceAssetsValidationFuse.sol, BurnRequestFeeFuse.sol]
+
+  - file: core/internal-libraries.md
+    desc: "Internal libraries — vault fees, market balances, asset distribution, type conversion, deploy metadata"
+    contracts: [AssetDistributionProtectionLib.sol, PlasmaVaultFeesLib.sol, PlasmaVaultMarketsLib.sol, TypeConversionLib.sol, FuseMetadataTypes.sol, FuseStatus.sol, FuseTypes.sol]
+
 patterns:
   - file: patterns/fuse-pattern.md
     desc: "Fuse lifecycle, types (supply/borrow/collateral/LP/swap/balance), security model"

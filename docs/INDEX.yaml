@@ -52,6 +52,9 @@ patterns:
   - file: patterns/market-ids.md
     desc: "Complete market ID reference table with dependency graph"
 
+  - file: patterns/substrates.md
+    desc: "Market substrate system — encoding patterns, per-market reference, security model"
+
 integrations:
   lending:
     - file: integrations/aave-v3.md

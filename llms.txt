@@ -19,6 +19,7 @@
 - [ERC4626 Pattern](docs/patterns/erc4626-pattern.md): Vault standard extensions
 - [Delegatecall](docs/patterns/delegatecall.md): Architecture, plugin system
 - [Market IDs](docs/patterns/market-ids.md): Complete market ID reference
+- [Substrates](docs/patterns/substrates.md): Market substrate system — encoding, per-market reference, security
 
 ## Integrations — Lending
 - [Aave V3](docs/integrations/aave-v3.md): Supply, borrow, collateral
